@@ -7,7 +7,9 @@ const methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const Joi = require('joi')
-const {spotSchema} = require('./schemas')
+const {spotSchema, reviewSchema} = require('./schemas')
+const Review = require('./models/review')
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/spotPedia')
 
@@ -36,6 +38,16 @@ const validateSpot = (req, res, next) => {
     }
 }
 
+const validateReview = (req, res, next) => {
+    const {error} = reviewSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
+
 app.get('/', (req, res) => {
     res.render('home')
 })
@@ -56,7 +68,7 @@ app.post('/spots', validateSpot, catchAsync(async (req, res, next) => {
 }))
 
 app.get('/spots/:id', catchAsync(async (req, res, next) => {
-    const spot = await Spot.findById(req.params.id)
+    const spot = await Spot.findById(req.params.id).populate('reviews')
     res.render('spots/show', {spot})
 }))
 
@@ -73,6 +85,22 @@ app.put('/spots/:id', validateSpot, catchAsync(async (req, res, next) => {
 app.delete('/spots/:id', catchAsync(async (req, res, next) => {
     await Spot.findByIdAndDelete(req.params.id)
     res.redirect('/spots')
+}))
+
+app.post('/spots/:id/reviews',validateReview, catchAsync(async (req, res) => {
+    const spot =  await Spot.findById(req.params.id)
+    const review = new Review(req.body.review)
+    spot.reviews.push(review)
+    await review.save()
+    await spot.save()
+    res.redirect(`/spots/${spot._id}`)
+}))
+
+app.delete('/spots/:id/reviews/:reviewId', catchAsync(async (req, res, next) => {
+    const {id, reviewId} = req.params
+    await Spot.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
+    await Review.findByIdAndDelete(req.params.reviewId)
+    res.redirect(`/spots/${id}`)
 }))
 
 app.all('*', (req, res, next) => {
