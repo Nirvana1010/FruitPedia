@@ -1,7 +1,10 @@
 <% layout('./layouts/boilerplate') %>
 <link rel="stylesheet" href="/stylesheets/stars.css" />
+
 <div class="row">
   <div class="col-6">
+    <div id="map" style="width: 400px; height: 300px"></div>
+
     <div id="spotCarousel" class="carousel slide">
       <div class="carousel-inner">
         <% spot.images.forEach((img, i) => { %>
@@ -152,3 +155,10 @@
     <% } %>
   </div>
 </div>
+
+<script>
+  const mapToken = "<%- process.env.MAPBOX_TOKEN %>";
+  const spot = <%- JSON.stringify(spot) %>;
+</script>
+
+<script src="/javascripts/showPageMap.js"></script>

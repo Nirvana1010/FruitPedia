@@ -1,4 +1,6 @@
 <% layout('./layouts/boilerplate') %>
+<div id="map" style="width: 100%; height: 500px"></div>
+
 <h1>All Travel Spots</h1>
 <div>
   <a href="/spots/new">Add Travel Spots</a>
@@ -7,7 +9,15 @@
 <div class="card" mb-3>
   <div class="row">
     <div class="col-md-4">
+      <% //if(spot.images.length) { %>
       <img class="img-fluid" src="<%= spot.images[0].url %>" alt="" />
+      <!-- <% //} else { %>
+      <img
+        class="img-fluid"
+        src="https://res.cloudinary.com/dfh2gktij/image/upload/v1694667452/SpotPedia/sjjucn2ic7r7hl0fpf5a.jpg"
+        alt=""
+      />
+      <% //} %> -->
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -24,3 +34,10 @@
   </div>
 </div>
 <% } %>
+
+<script>
+  const mapToken = "<%- process.env.MAPBOX_TOKEN %>";
+  const spots = {features: <%- JSON.stringify(spots) %>};
+</script>
+
+<script src="/javascripts/clusterMap.js"></script>

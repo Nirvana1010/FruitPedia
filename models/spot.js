@@ -11,9 +11,22 @@ ImageSchema.virtual('thumbnail').get(function() {
     return this.url.replace('/upload', '/upload/w_200')
 })
 
+const opts = { toJSON: {virtuals: true} }
+
 const SpotSchema = new Schema({
     title: String,
     images: [ImageSchema],
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,
@@ -27,6 +40,12 @@ const SpotSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts)
+
+SpotSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <string><a href="/spots/${this._id}">${this.title}</a><string>
+    <p>${this.description.substring(0, 40)}...</p>`
 })
 
 SpotSchema.post('findOneAndDelete', async function(doc) {
