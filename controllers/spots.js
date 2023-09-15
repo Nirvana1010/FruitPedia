@@ -23,7 +23,7 @@ module.exports.createSpots = async (req, res, next) => {
     spot.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     spot.author = req.user._id
     await spot.save()
-    console.log(spot)
+    // console.log(spot)
     req.flash('success', 'Sucessfully made a new travel spots!')
     res.redirect(`/spots/${spot._id}`)
  }
