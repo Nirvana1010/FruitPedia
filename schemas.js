@@ -29,7 +29,9 @@ module.exports.spotSchema = Joi.object({
         price: Joi.number().required().min(0),
         // image: Joi.string().required(),
         location: Joi.string().required().escapeHTML(),
-        description: Joi.string().required().escapeHTML()
+        description: Joi.string().required().escapeHTML(),
+        market: Joi.string().required().escapeHTML(),
+        website: Joi.string().optional().allow(''),
     }).required(),
     deleteImages: Joi.array()
 })

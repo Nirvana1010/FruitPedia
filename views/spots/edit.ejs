@@ -19,7 +19,30 @@
           value="<%= spot.title %>"
           required
         />
-        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid title.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="location">Grocery Store</label>
+        <input
+          class="form-control"
+          type="text"
+          name="spot[market]"
+          id="market"
+          value="<%= spot.market %>"
+          required
+        />
+        <div class="invalid-feedback">Please provide a valid shop.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="location">Official Link</label>
+        <input
+          class="form-control"
+          type="url"
+          name="spot[website]"
+          id="website"
+          value="<%= spot.website %>"
+        />
+        <!-- <div class="valid-feedback">Looks good!</div> -->
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location</label>
@@ -31,14 +54,14 @@
           value="<%= spot.location %>"
           required
         />
-        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid location.</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">Price</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="price-label">$</span>
           <input
-            type="text"
+            type="number"
             class="form-control"
             placeholder="0.00"
             aria-label="price"
@@ -48,7 +71,7 @@
             value="<%= spot.price %>"
             required
           />
-          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Please provide a valid number.</div>
         </div>
       </div>
       <div class="mb-3">
@@ -62,7 +85,7 @@
         >
           <%= spot.description %>
         </textarea>
-        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide some description.</div>
       </div>
       <div class="mb-3">
         <label for="image" class="form-label">Add more image(s)</label>
@@ -90,7 +113,7 @@
         <% }) %>
       </div>
       <div class="mb-3">
-        <button class="btn btn-info">Update Spot</button>
+        <button class="btn btn-warning">Update Spot</button>
       </div>
     </form>
     <a href="/spots">Back To Travel Spots</a>

@@ -9,6 +9,7 @@ const path = require('path')
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
 const ExpressError = require('./utils/ExpressError')
@@ -23,8 +24,9 @@ const userRoutes = require('./routes/users')
 
 const mongoSanitize = require('express-mongo-sanitize');
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/spotPedia')
+// const dbUrl = process.env.DB_URL;
+const dbUrl = 'mongodb://127.0.0.1:27017/spotPedia';
+mongoose.connect(dbUrl)
 
 const db = mongoose.connection
 db.on('error', console.error.bind(console, "Connection error:"))
@@ -43,7 +45,18 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize())
 
+const store = new MongoStore({
+    url: dbUrl,
+    secret: 'thisshouldbebettersecret',
+    touchAfter: 24 * 60 * 60
+})
+
+store.on("error", function(e) {
+    console.log("Session Store Error", e)
+})
+
 const sessionConfig = {
+    store: store,
     name: 'session',
     secret: 'thisshouldbebettersecret',
     resave: false,
